@@ -3,68 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meetville Premium Checkout</title>
-    <script src="https://cdn.jsdelivr.net/npm/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+    <title>Secure Checkout</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #f9f9f9; padding: 20px; display: flex; justify-content: center; }
-        .checkout-container { max-width: 450px; width: 100%; background: #fff; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); padding: 20px; box-sizing: border-box; }
-        .price-banner { background: linear-gradient(135deg, #a83279, #6d1b7b); color: #fff; text-align: center; border-radius: 12px; padding: 20px; margin-bottom: 20px; }
-        .price-banner h2 { margin: 0; font-size: 28px; font-weight: bold; }
-        .price-banner p { margin: 5px 0 0; font-size: 13px; opacity: 0.9; }
-        .badge-row { background: #f5f5f7; border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; font-size: 12px; color: #555; margin-bottom: 20px; }
-        .badge-item { display: flex; align-items: center; gap: 5px; }
-        .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .dot.green { background: #4caf50; }
-        .dot.red { background: #f44336; }
-        .form-group { margin-bottom: 15px; }
-        .form-row { display: flex; gap: 15px; }
-        .form-row .form-group { flex: 1; }
-        label { display: block; font-size: 14px; font-weight: 600; color: #222; margin-bottom: 6px; }
-        input { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 8px; box-sizing: border-box; font-size: 15px; background: #fff; }
-        input::placeholder { color: #aaa; }
-        .info-box { background: #f3ebf2; border-radius: 10px; padding: 15px; font-size: 13px; color: #616161; margin-bottom: 25px; line-height: 1.4; }
-        .info-box ul { margin: 0; padding-left: 15px; }
-        .info-box li { margin-bottom: 5px; list-style-type: '• '; }
-        .pay-btn { width: 100%; background: #9c27b0; color: white; border: none; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        
-        /* Toast & Iframe Loading Styles from Screenshot_20260625-105645.png */
-        .toast-container { display: none; background: #031525; color: #6ca7f7; padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .iframe-wrapper { display: none; margin-top: 20px; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; background: #fff; min-height: 450px; position: relative; }
-        .loading-dots { display: flex; justify-content: center; align-items: center; gap: 6px; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-        .circle { width: 10px; height: 10px; background: #1e6091; border-radius: 50%; animation: bounce 1.2s infinite ease-in-out; }
-        .circle:nth-child(2) { animation-delay: -1.1s; }
-        .circle:nth-child(3) { animation-delay: -1.0s; }
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
-        iframe { width: 100%; height: 600px; border: none; z-index: 2; position: relative; display: none; }
+        body { font-family: sans-serif; background-color: #f9f9f9; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .box { max-width: 400px; width: 100%; background: #fff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); padding: 20px; box-sizing: border-box; }
+        .banner { background: #6d1b7b; color: white; text-align: center; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        button { width: 100%; background: #9c27b0; color: white; padding: 12px; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; font-weight: bold; }
+        .loading { display: none; text-align: center; color: #1e6091; font-weight: bold; margin: 20px 0; }
+        iframe { width: 100%; height: 500px; border: 1px solid #ddd; border-radius: 8px; display: none; margin-top: 15px; }
     </style>
 </head>
 <body>
 
-<div class="checkout-container" id="checkoutWindow">
-    <div class="price-banner">
-        <h2>KSh 100 <span style="font-size: 14px; font-weight: normal;">one-time</span></h2>
-        <p>Pay via M-Pesa, Airtel Money, or Card — powered by PesaPal</p>
+<div class="box">
+    <div class="banner">
+        <h2>KSh 100.00</h2>
+        <p>Premium Upgrade via PesaPal</p>
     </div>
 
-    <!-- Toast Notification (Screenshot_20260625-105645.png) -->
-    <div class="toast-container" id="toastNotice">
-        <i data-lucide="info" style="width: 18px; height: 18px;"></i>
-        <span>Secure PesaPal checkout opened. Choose M-Pesa or Airtel to pay.</span>
-    </div>
-
-    <div id="formContainer">
-        <div class="badge-row">
-            <span class="badge-item"><span class="dot green"></span> M-Pesa</span>
-            <span class="badge-item"><span class="dot red"></span> Airtel Money</span>
-            <span class="badge-item"><i data-lucide="credit-card" style="width:14px;"></i> Card</span>
-            <span style="color:#aaa;">via PesaPal</span>
-        </div>
-
+    <div id="formView">
         <form id="paymentForm">
-            <div class="form-row">
-                <div class="form-group">
-                    <label>First Name</label>
-                    <input type="text" id="firstName" placeholder="e.g. John" required>
-                </div>
-                <div class="form-group">
-Normally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
+            <label>First Name</label>
+            <input type="text" id="firstName" placeholder="e.g. John" required>
+            
+            <label>Last Name</label>
+            <input type="text" id="lastName" placeholder="e.g. Doe" required>
+            
+            <label>Phone Number</label>
+            <input type="text" id="phoneNumber" placeholder="e.g. 07XXXXXXXX" required>
+            
+            <button type="submit">Pay KSh 100 via PesaPal</button>
+        </form>
+    </div>
+
+    <div id="loadingStatus" class="loading">Secure PesaPal checkout loading...</div>
+    <iframe id="pesapalFrame"></iframe>
+</div>
+
+<script>
+    document.getElementById('paymentForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const phoneNumber = document.getElementById('phoneNumber').value;
+
+        // UI View State Shifts
+        document.getElementById('formView').style.display = 'none';
+        document.getElementById('loadingStatus').style.display = 'block';
+
+        try {
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ firstName, lastName, phoneNumber })
+            });
+            const data = await response.json();
+
+            if (data.success && data.redirect_url) {
+                document.getElementById('loadingStatus').style.display = 'none';
+                const frame = document.getElementById('pesapalFrame');
+                frame.src = data.redirect_url;
+                frame.style.display = 'block';
+            } else {
+                alert('Checkout setup failed.');
+                location.reload();
+            }
+        } catch (err) {
+            alert('Communication breakdown error.');
+            location.reload();
+        }
+    });
+</script>
+
+</body>
+</html>
